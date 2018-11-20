@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -16,11 +17,28 @@ def systems_creator(request):
         request_user = request.user
 
         # call async function
-        async_task(
+        lines_empty_counter, lines_nostring_counter, lines_long_counter = async_task(
             "dfirtrack_main.creator.systems_creator.systems_creator_async",
             request_post,
             request_user,
         )
+
+        # call final messages
+        if lines_empty_counter > 0:
+            if lines_empty_counter == 1:
+                messages.warning(request, str(lines_empty_counter) + ' submitted line was empty.')
+            else:
+                messages.warning(request, str(lines_empty_counter) + ' submitted lines were empty.')
+        if lines_nostring_counter > 0:
+            if lines_nostring_counter == 1:
+                messages.warning(request, str(lines_nostring_counter) + ' submitted line was no valid string.')
+            else:
+                messages.warning(request, str(lines_nostring_counter) + ' submitted lines were no valid string.')
+        if lines_long_counter > 0:
+            if lines_long_counter == 1:
+                messages.warning(request, str(lines_long_counter) + ' submitted line was too long.')
+            else:
+                messages.warning(request, str(lines_long_counter) + ' submitted lines were too long.')
 
         return redirect('/systems')
 
@@ -44,22 +62,30 @@ def systems_creator_async(request_post, request_user):
     # exctract lines from systemlist (list results from request object via large text area)
     lines = request_post.get('systemlist').splitlines()
 
+    # set counter
+    lines_empty_counter = 0
+    lines_nostring_counter = 0
+    lines_long_counter = 0
+
     # iterate over lines
     for line in lines:
 
         # skip emtpy lines
         if line == '':
             warning_logger(str(request_user), " SYSTEM_CREATOR_ROW_EMPTY")
+            lines_empty_counter += 1
             continue
 
         # check line for string
         if not isinstance(line, str):
             warning_logger(str(request_user), " SYSTEM_CREATOR_NO_STRING")
+            lines_nostring_counter += 1
             continue
 
         # check line for length of string
         if len(line) > 50:
             warning_logger(str(request_user), " SYSTEM_CREATOR_LONG_STRING")
+            lines_long_counter += 1
             continue
 
         # check for existence of system
@@ -98,3 +124,5 @@ def systems_creator_async(request_post, request_user):
 
     # call logger
     debug_logger(str(request_user), " SYSTEM_CREATOR_END")
+
+    return(lines_empty_counter, lines_nostring_counter, lines_long_counter)
