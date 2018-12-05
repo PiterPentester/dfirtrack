@@ -21,6 +21,7 @@ def systems_creator(request):
             "dfirtrack_main.creator.systems_creator.systems_creator_async",
             request_post,
             request_user,
+            hook = "dfirtrack_main.creator.systems_creator.systems_creator_hook",
         )
 
         ## call final messages
@@ -124,3 +125,6 @@ def systems_creator_async(request_post, request_user):
 
     # call logger
     debug_logger(str(request_user), " SYSTEM_CREATOR_END")
+
+def systems_creator_hook(task):
+    print("foobar")
