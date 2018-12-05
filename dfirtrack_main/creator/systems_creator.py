@@ -17,28 +17,28 @@ def systems_creator(request):
         request_user = request.user
 
         # call async function
-        lines_empty_counter, lines_nostring_counter, lines_long_counter = async_task(
+        async_task(
             "dfirtrack_main.creator.systems_creator.systems_creator_async",
             request_post,
             request_user,
         )
 
-        # call final messages
-        if lines_empty_counter > 0:
-            if lines_empty_counter == 1:
-                messages.warning(request, str(lines_empty_counter) + ' submitted line was empty.')
-            else:
-                messages.warning(request, str(lines_empty_counter) + ' submitted lines were empty.')
-        if lines_nostring_counter > 0:
-            if lines_nostring_counter == 1:
-                messages.warning(request, str(lines_nostring_counter) + ' submitted line was no valid string.')
-            else:
-                messages.warning(request, str(lines_nostring_counter) + ' submitted lines were no valid string.')
-        if lines_long_counter > 0:
-            if lines_long_counter == 1:
-                messages.warning(request, str(lines_long_counter) + ' submitted line was too long.')
-            else:
-                messages.warning(request, str(lines_long_counter) + ' submitted lines were too long.')
+        ## call final messages
+        #if lines_empty_counter > 0:
+        #    if lines_empty_counter == 1:
+        #        messages.warning(request, str(lines_empty_counter) + ' submitted line was empty.')
+        #    else:
+        #        messages.warning(request, str(lines_empty_counter) + ' submitted lines were empty.')
+        #if lines_nostring_counter > 0:
+        #    if lines_nostring_counter == 1:
+        #        messages.warning(request, str(lines_nostring_counter) + ' submitted line was no valid string.')
+        #    else:
+        #        messages.warning(request, str(lines_nostring_counter) + ' submitted lines were no valid string.')
+        #if lines_long_counter > 0:
+        #    if lines_long_counter == 1:
+        #        messages.warning(request, str(lines_long_counter) + ' submitted line was too long.')
+        #    else:
+        #        messages.warning(request, str(lines_long_counter) + ' submitted lines were too long.')
 
         return redirect('/systems')
 
@@ -124,5 +124,3 @@ def systems_creator_async(request_post, request_user):
 
     # call logger
     debug_logger(str(request_user), " SYSTEM_CREATOR_END")
-
-    return(lines_empty_counter, lines_nostring_counter, lines_long_counter)
