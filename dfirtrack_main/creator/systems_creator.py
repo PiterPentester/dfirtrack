@@ -21,7 +21,7 @@ def systems_creator(request):
             "dfirtrack_main.creator.systems_creator.systems_creator_async",
             request_post,
             request_user,
-            hook = "dfirtrack_main.creator.systems_creator.systems_creator_hook(request)",
+            hook = "dfirtrack_main.creator.systems_creator.systems_creator_hook",
         )
 
         return redirect('/systems')
@@ -117,38 +117,39 @@ def systems_creator_async(request_post, request_user):
     return(lines_empty_counter, lines_nostring_counter, lines_long_counter, systems_existing_counter, systems_created_counter)
 
 def systems_creator_hook(task):
+
     print(str(task.result))
 
     # get counters out of task result
-    lines_empty_counter = task.result[0]
-    lines_nostring_counter = task.result[1]
-    lines_long_counter = task.result[2]
-    systems_existing_counter = task.result[3]
-    systems_created_counter = task.result[4]
+    #lines_empty_counter = task.result[0]
+    #lines_nostring_counter = task.result[1]
+    #lines_long_counter = task.result[2]
+    #systems_existing_counter = task.result[3]
+    #systems_created_counter = task.result[4]
 
-    # call final messages
-    if lines_empty_counter > 0:
-        if lines_empty_counter == 1:
-            messages.warning(request, str(lines_empty_counter) + ' submitted line was empty in last Systems Creator run.')
-        else:
-            messages.warning(request, str(lines_empty_counter) + ' submitted lines were empty in last Systems Creator run.')
-    if lines_nostring_counter > 0:
-        if lines_nostring_counter == 1:
-            messages.warning(request, str(lines_nostring_counter) + ' submitted line was no valid string in last Systems Creator run.')
-        else:
-            messages.warning(request, str(lines_nostring_counter) + ' submitted lines were no valid string in last Systems Creator run.')
-    if lines_long_counter > 0:
-        if lines_long_counter == 1:
-            messages.warning(request, str(lines_long_counter) + ' submitted line was too long in last Systems Creator run.')
-        else:
-            messages.warning(request, str(lines_long_counter) + ' submitted lines were too long in last Systems Creator run.')
-    if systems_created_counter > 0:
-        if systems_created_counter == 1:
-            messages.success(request, str(systems_created_counter) + ' system was created in last Systems Creator run.')
-        else:
-            messages.success(request, str(systems_created_counter) + ' systems were created in last Systems Creator run.')
-    if systems_existing_counter > 0:
-        if systems_existing_counter == 1:
-            messages.success(request, str(systems_existing_counter) + ' submitted line was too long in last Systems Creator run.')
-        else:
-            messages.success(request, str(systems_existing_counter) + ' submitted lines were too long in last Systems Creator run.')
+    ## call final messages
+    #if lines_empty_counter > 0:
+    #    if lines_empty_counter == 1:
+    #        messages.warning(request, str(lines_empty_counter) + ' submitted line was empty in last Systems Creator run.')
+    #    else:
+    #        messages.warning(request, str(lines_empty_counter) + ' submitted lines were empty in last Systems Creator run.')
+    #if lines_nostring_counter > 0:
+    #    if lines_nostring_counter == 1:
+    #        messages.warning(request, str(lines_nostring_counter) + ' submitted line was no valid string in last Systems Creator run.')
+    #    else:
+    #        messages.warning(request, str(lines_nostring_counter) + ' submitted lines were no valid string in last Systems Creator run.')
+    #if lines_long_counter > 0:
+    #    if lines_long_counter == 1:
+    #        messages.warning(request, str(lines_long_counter) + ' submitted line was too long in last Systems Creator run.')
+    #    else:
+    #        messages.warning(request, str(lines_long_counter) + ' submitted lines were too long in last Systems Creator run.')
+    #if systems_created_counter > 0:
+    #    if systems_created_counter == 1:
+    #        messages.success(request, str(systems_created_counter) + ' system was created in last Systems Creator run.')
+    #    else:
+    #        messages.success(request, str(systems_created_counter) + ' systems were created in last Systems Creator run.')
+    #if systems_existing_counter > 0:
+    #    if systems_existing_counter == 1:
+    #        messages.success(request, str(systems_existing_counter) + ' submitted line was too long in last Systems Creator run.')
+    #    else:
+    #        messages.success(request, str(systems_existing_counter) + ' submitted lines were too long in last Systems Creator run.')
